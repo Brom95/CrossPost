@@ -10,12 +10,24 @@ namespace CrossPost
         {
             List<Task> tasks = new();
 
-            foreach (IConfigurationSection section in _config.GetSection("Receivers").GetChildren())
+            foreach (IConfigurationSection receiverSection in _config.GetSection("Receivers").GetChildren())
             {
-                _logger.LogInformation(section.GetValue<string>("Type"));
-                var receiver = new MessageReceiver.TgChannelMessageReceiver(section.GetValue<string>("TgBotToken"), stoppingToken);
+                _logger.LogInformation(receiverSection.GetValue<string>("Type"));
+                var receiver = new MessageReceiver.TgChannelMessageReceiver(receiverSection.GetValue<string>("TgBotToken"), stoppingToken);
                 var sender = new MessageSender.ConsoleMessageSender();
                 receiver.Subscribe(sender);
+                foreach (IConfigurationSection senderSection in _config.GetSection("Senders").GetChildren())
+                {
+                    if (senderSection.GetValue<string>("Type") == "VkGroupOrPage")
+                    {
+                        MessageSender.VKGroupOrUserWallMessageSender realSender = new(
+                            senderSection.GetValue<string>("access_token"), 
+                            senderSection.GetValue<string>("groupOrUserID"), 
+                            stoppingToken);
+                        receiver.Subscribe(realSender);
+                    }
+
+                }
                 tasks.Add(receiver.StartReceiving(stoppingToken));
             }
 

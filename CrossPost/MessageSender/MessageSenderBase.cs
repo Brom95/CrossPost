@@ -19,9 +19,9 @@ namespace CrossPost.MessageSender
             throw new NotImplementedException();
         }
 
-        public void OnNext(Message value)
+        public async void OnNext(Message value)
         {
-            Send(value);
+            await Send(value);
         }
     }
 }
