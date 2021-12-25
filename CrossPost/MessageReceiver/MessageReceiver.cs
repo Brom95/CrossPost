@@ -1,15 +1,17 @@
 ﻿
 
+using Receiver;
+
 namespace CrossPost.MessageReceiver;
-public abstract class MessageReceiverBase : IObservable<Message>
+public class MessageReceiver : IObservable<Message.Message>
 {
-    private List<IObserver<Message>> _subscribers = new();
-    public abstract Task<Message> ReceiveMessage();
+    private List<IObserver<Message.Message>> _subscribers = new();
+    public IReceiver Receiver { get; set; }
     public async Task StartReceiving(CancellationToken cancelToken)
     {
         while (!cancelToken.IsCancellationRequested)
         {
-            var message = await ReceiveMessage();
+            var message = await Receiver.ReceiveMessage();
             foreach (var subscriber in _subscribers)
             {
                 subscriber.OnNext(message);
@@ -17,7 +19,7 @@ public abstract class MessageReceiverBase : IObservable<Message>
 
         }
     }
-    public IDisposable Subscribe(IObserver<Message> observer)
+    public IDisposable Subscribe(IObserver<Message.Message> observer)
     {
         _subscribers.Add(observer);
 
@@ -26,10 +28,10 @@ public abstract class MessageReceiverBase : IObservable<Message>
 
     private class Unsubscriber : IDisposable
     {
-        private List<IObserver<Message>> _observers;
-        private IObserver<Message> _observer;
+        private List<IObserver<Message.Message>> _observers;
+        private IObserver<Message.Message> _observer;
 
-        public Unsubscriber(List<IObserver<Message>> observers, IObserver<Message> observer)
+        public Unsubscriber(List<IObserver<Message.Message>> observers, IObserver<Message.Message> observer)
         {
             this._observers = observers;
             this._observer = observer;

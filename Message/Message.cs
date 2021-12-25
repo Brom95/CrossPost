@@ -1,4 +1,4 @@
-﻿namespace CrossPost;
+﻿namespace Message;
 public struct Message
 {
     public string Text { get; set; }
@@ -6,4 +6,3 @@ public struct Message
 
     public byte[] Attachment { get; set; }
 }
-

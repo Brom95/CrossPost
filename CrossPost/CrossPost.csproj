@@ -12,4 +12,10 @@
     <PackageReference Include="Telegram.Bot" Version="17.0.0" />
     <PackageReference Include="Telegram.Bot.Extensions.Polling" Version="1.0.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IReceiver\Receiver.csproj" />
+    <ProjectReference Include="..\Message\Message.csproj" />
+    <ProjectReference Include="..\Sender\Sender.csproj" />
+  </ItemGroup>
 </Project>
