@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<DebugType>none</DebugType>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Message\Message.csproj" />
+		<ProjectReference Include="..\Sender\Sender.csproj" />
+	</ItemGroup>
+	<Target Name="CopyDLLs" AfterTargets="Build">
+
+		<Copy
+		  SourceFiles="$(TargetDir)$(ProjectName).dll;"
+		  DestinationFolder="..\CrossPost\Plugins\Senders\" />
+
+	</Target>
+
+</Project>
