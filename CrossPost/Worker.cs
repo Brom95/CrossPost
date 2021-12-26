@@ -14,21 +14,13 @@ namespace CrossPost
             {
                 _logger.LogInformation(receiverSection.GetValue<string>("Type"));
                 var receiver = MessageReceiver.ReceiverFactory.GetMessageReceiver(receiverSection, stoppingToken);
-                var sender = new MessageSender.ConsoleMessageSender();
-                receiver.Subscribe(sender);
+
                 foreach (IConfigurationSection senderSection in _config.GetSection("Senders").GetChildren())
                 {
-                    if (senderSection.GetValue<string>("Type") == "VkGroupOrPage")
-                    {
-                        MessageSender.VKGroupOrUserWallMessageSender realSender = new(
-                            senderSection.GetValue<string>("access_token"), 
-                            senderSection.GetValue<string>("groupOrUserID"), 
-                            stoppingToken);
-                        receiver.Subscribe(realSender);
-                    }
-
+                    var sender = MessageSender.SenderFactory.GetMessageSender(senderSection);
+                    receiver?.Subscribe(sender);
                 }
-                tasks.Add(receiver.StartReceiving(stoppingToken));
+                tasks.Add(receiver?.StartReceiving(stoppingToken));
             }
 
             await Task.WhenAll(tasks.ToArray());
