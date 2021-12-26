@@ -9,5 +9,5 @@ public interface IReceiver
 
 public interface IReceiverFactory
 {
-    public IReceiver CreateReceiver(IConfigurationSection receiverSection);
+    public IReceiver CreateReceiver(IConfigurationSection receiverSection, CancellationToken cancelToken);
 }

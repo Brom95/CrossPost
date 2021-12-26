@@ -1,12 +1,15 @@
-﻿
+﻿using Microsoft.Extensions.Configuration;
+using Receiver;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types.Enums;
 using System.Runtime.CompilerServices;
 
-namespace CrossPost.MessageReceiver;
-public class TgChannelMessageReceiver : MessageReceiverBase
+namespace TgBotReceiver;
+
+
+public class TgChannelMessageReceiver : Receiver.IReceiver
 {
     private QueuedUpdateReceiver _updateReceiver;
     private ConfiguredCancelableAsyncEnumerable<Update>.Enumerator enumerator;
@@ -22,15 +25,24 @@ public class TgChannelMessageReceiver : MessageReceiverBase
         enumerator = _updateReceiver.WithCancellation(cancelToken).GetAsyncEnumerator();
     }
 
-    public override async Task<Message> ReceiveMessage()
+    public async Task<global::Message.Message> ReceiveMessage()
     {
-       
         await enumerator.MoveNextAsync();
 
-        return new Message
+        return new global::Message.Message
         {
             Text = enumerator.Current.ChannelPost?.Text ?? ""
         };
     }
 }
 
+
+
+public class TgBotReceiverFactory : Receiver.IReceiverFactory
+{
+    public IReceiver CreateReceiver(IConfigurationSection receiverSection, CancellationToken cancelToken)
+    {
+        var token = receiverSection.GetValue<string>("TgBotToken");
+        return new TgChannelMessageReceiver(token, cancelToken);
+    }
+}

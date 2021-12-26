@@ -5,11 +5,13 @@ VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrossPost", "CrossPost\CrossPost.csproj", "{0F7AC0CF-47C9-4490-AB0D-F82071E3838B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Receiver", "IReceiver\Receiver.csproj", "{6708BE33-211C-4571-94EB-151845795239}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Receiver", "IReceiver\Receiver.csproj", "{6708BE33-211C-4571-94EB-151845795239}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sender", "Sender\Sender.csproj", "{F623627A-42F7-45E3-9269-2EEB56CB736E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sender", "Sender\Sender.csproj", "{F623627A-42F7-45E3-9269-2EEB56CB736E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Message", "Message\Message.csproj", "{C53BA5C9-F5F5-4C30-AC6A-284A5AFEF592}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Message", "Message\Message.csproj", "{C53BA5C9-F5F5-4C30-AC6A-284A5AFEF592}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TgBotReceiver", "TgBotReceiver\TgBotReceiver.csproj", "{A38A6BC3-C85C-4977-B660-6C6C5EB523B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{C53BA5C9-F5F5-4C30-AC6A-284A5AFEF592}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C53BA5C9-F5F5-4C30-AC6A-284A5AFEF592}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C53BA5C9-F5F5-4C30-AC6A-284A5AFEF592}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A38A6BC3-C85C-4977-B660-6C6C5EB523B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A38A6BC3-C85C-4977-B660-6C6C5EB523B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A38A6BC3-C85C-4977-B660-6C6C5EB523B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A38A6BC3-C85C-4977-B660-6C6C5EB523B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -6,12 +6,12 @@ namespace CrossPost.MessageReceiver;
 public class MessageReceiver : IObservable<Message.Message>
 {
     private List<IObserver<Message.Message>> _subscribers = new();
-    public IReceiver Receiver { get; set; }
+    private readonly IReceiver _receiver;
     public async Task StartReceiving(CancellationToken cancelToken)
     {
         while (!cancelToken.IsCancellationRequested)
         {
-            var message = await Receiver.ReceiveMessage();
+            var message = await _receiver.ReceiveMessage();
             foreach (var subscriber in _subscribers)
             {
                 subscriber.OnNext(message);
@@ -19,6 +19,7 @@ public class MessageReceiver : IObservable<Message.Message>
 
         }
     }
+    public MessageReceiver(IReceiver receiver) => _receiver = receiver;
     public IDisposable Subscribe(IObserver<Message.Message> observer)
     {
         _subscribers.Add(observer);

@@ -13,7 +13,7 @@ namespace CrossPost
             foreach (IConfigurationSection receiverSection in _config.GetSection("Receivers").GetChildren())
             {
                 _logger.LogInformation(receiverSection.GetValue<string>("Type"));
-                var receiver = new MessageReceiver.TgChannelMessageReceiver(receiverSection.GetValue<string>("TgBotToken"), stoppingToken);
+                var receiver = MessageReceiver.ReceiverFactory.GetMessageReceiver(receiverSection, stoppingToken);
                 var sender = new MessageSender.ConsoleMessageSender();
                 receiver.Subscribe(sender);
                 foreach (IConfigurationSection senderSection in _config.GetSection("Senders").GetChildren())
