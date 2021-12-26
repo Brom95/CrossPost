@@ -6,9 +6,13 @@ using System.Threading.Tasks;
 
 namespace CrossPost.MessageSender
 {
-    public abstract class MessageSenderBase : IObserver<Message>
+    public class MessageSender : IObserver<Message.Message>
     {
-        public abstract Task Send(Message message);
+        private Sender.ISender _sender;
+        public MessageSender(Sender.ISender sender)
+        {
+            _sender = sender;
+        }
         public void OnCompleted()
         {
             throw new NotImplementedException();
@@ -19,9 +23,9 @@ namespace CrossPost.MessageSender
             throw new NotImplementedException();
         }
 
-        public async void OnNext(Message value)
+        public async void OnNext(Message.Message value)
         {
-            await Send(value);
+            await _sender.Send(value);
         }
     }
 }
