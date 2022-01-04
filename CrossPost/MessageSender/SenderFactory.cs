@@ -12,7 +12,7 @@ static class SenderFactory
     static public MessageSender GetMessageSender(IConfigurationSection configurationSection)
     {
         var pluginName = configurationSection.GetValue<string>("Type");
-        var asm = Assembly.LoadFrom($"Plugins/Senders/{pluginName}.dll");
+        var asm = Assembly.LoadFrom($"Plugins/Senders/{pluginName}/{pluginName}.dll");
         foreach (Type type in asm.GetTypes())
         {
             if (typeof(ISenderFactory).IsAssignableFrom(type))

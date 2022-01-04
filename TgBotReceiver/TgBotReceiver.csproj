@@ -1,18 +1,22 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<BaseOutputPath>bin\</BaseOutputPath>
 		<DebugType>none</DebugType>
+		<ProduceReferenceAssembly>True</ProduceReferenceAssembly>
+		<EnableDynamicLoading>true</EnableDynamicLoading>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0" />
+
 		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
 		<PackageReference Include="Telegram.Bot" Version="17.0.0" />
-		<PackageReference Include="Telegram.Bot.Extensions.Polling" Version="1.0.1" />
+		<PackageReference Include="Telegram.Bot.Extensions.Polling" Version="1.0.1" >
+			<Private>false</Private>
+		</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -20,11 +24,9 @@
 		<ProjectReference Include="..\Message\Message.csproj" />
 	</ItemGroup>
 	<Target Name="CopyDLLs" AfterTargets="Build">
-
 		<Copy
-		  SourceFiles="$(TargetDir)$(ProjectName).dll;"
-		  DestinationFolder="..\CrossPost\Plugins\Senders\" />
-
+		  SourceFiles="$(TargetDir)$(ProjectName).dll;$(TargetDir)Telegram.Bot.Extensions.Polling.dll"
+		  DestinationFolder="..\CrossPost\Plugins\Receivers\$(ProjectName)" />
 	</Target>
 
 </Project>

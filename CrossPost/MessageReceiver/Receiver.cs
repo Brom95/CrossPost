@@ -3,7 +3,7 @@
 using Receiver;
 
 namespace CrossPost.MessageReceiver;
-public class MessageReceiver : IObservable<Message.Message>
+public class Receiver : IObservable<Message.Message>
 {
     private List<IObserver<Message.Message>> _subscribers = new();
     private readonly IReceiver _receiver;
@@ -19,7 +19,7 @@ public class MessageReceiver : IObservable<Message.Message>
 
         }
     }
-    public MessageReceiver(IReceiver receiver) => _receiver = receiver;
+    public Receiver(IReceiver receiver) => _receiver = receiver;
     public IDisposable Subscribe(IObserver<Message.Message> observer)
     {
         _subscribers.Add(observer);

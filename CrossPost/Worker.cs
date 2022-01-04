@@ -1,30 +1,40 @@
-namespace CrossPost
+using CrossPost.PluginsController;
+
+namespace CrossPost;
+
+public class Worker : BackgroundService
 {
-    public class Worker : BackgroundService
+    private readonly ILogger<Worker> _logger;
+    private readonly IConfiguration _config;
+    private readonly PluginFactory _pluginFactory;
+    public Worker(ILogger<Worker> logger, IConfiguration configuration, PluginFactory pluginFactory) => (_logger, _config, _pluginFactory) = (logger, configuration, pluginFactory);
+
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        private readonly ILogger<Worker> _logger;
-        private readonly IConfiguration _config;
-        public Worker(ILogger<Worker> logger, IConfiguration config) => (_logger, _config) = (logger, config);
+        List<Task> tasks = new();
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        foreach (IConfigurationSection receiverSection in _config.GetSection("Receivers").GetChildren())
         {
-            List<Task> tasks = new();
+            _logger.LogInformation(receiverSection.GetValue<string>("Type"));
+            var receiver = _pluginFactory.GetMessageReceiver(receiverSection, stoppingToken);
 
-            foreach (IConfigurationSection receiverSection in _config.GetSection("Receivers").GetChildren())
+            foreach (IConfigurationSection senderSection in _config.GetSection("Senders").GetChildren())
             {
-                _logger.LogInformation(receiverSection.GetValue<string>("Type"));
-                var receiver = MessageReceiver.ReceiverFactory.GetMessageReceiver(receiverSection, stoppingToken);
-
-                foreach (IConfigurationSection senderSection in _config.GetSection("Senders").GetChildren())
+                try
                 {
+
                     var sender = MessageSender.SenderFactory.GetMessageSender(senderSection);
                     receiver?.Subscribe(sender);
                 }
-                tasks.Add(receiver?.StartReceiving(stoppingToken));
+                catch (Exception ex)
+                {
+                    _logger.LogWarning($"{ex}");
+                }
             }
-
-            await Task.WhenAll(tasks.ToArray());
-
+            tasks.Add(receiver?.StartReceiving(stoppingToken));
         }
+
+        await Task.WhenAll(tasks.ToArray());
+
     }
 }
