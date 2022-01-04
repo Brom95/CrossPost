@@ -22,8 +22,7 @@ public class Worker : BackgroundService
             {
                 try
                 {
-
-                    var sender = MessageSender.SenderFactory.GetMessageSender(senderSection);
+                    var sender = _pluginFactory.GetMessageSender(senderSection);
                     receiver?.Subscribe(sender);
                 }
                 catch (Exception ex)
