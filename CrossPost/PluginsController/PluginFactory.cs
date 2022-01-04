@@ -17,7 +17,7 @@ namespace CrossPost.PluginsController
         private string GetSenderPath(string pluginName) => Path.Join(new string[] { _sendersBasePath, pluginName, $"{pluginName}.dll" });
         private T GetPlugin<T>(string pluginPath) where T : class
         {
-            var asm = PluginLoadContext.LoadPlugin(GetReceiverPath(pluginPath));
+            var asm = PluginLoadContext.LoadPlugin(pluginPath);
             foreach (Type type in asm.GetTypes())
             {
                 if (typeof(IReceiverFactory).IsAssignableFrom(type))
