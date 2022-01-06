@@ -12,7 +12,8 @@ public class ConsoleSender : ISender
 
 public class ConsoleSenderFactory : ISenderFactory
 {
-    public ISender CreateSender(IConfigurationSection receiverSection)
+
+    public ISender CreateSender(IConfigurationSection receiverSection, CancellationToken cancelToken)
     {
         return new ConsoleSender();
     }

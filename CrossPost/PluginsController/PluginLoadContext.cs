@@ -40,8 +40,7 @@ class PluginLoadContext : AssemblyLoadContext
     }
     static public Assembly LoadPlugin(string pluginLocation)
     {
-        // Navigate up to the solution root
-        PluginLoadContext loadContext = new PluginLoadContext(pluginLocation);
+        PluginLoadContext loadContext = new(pluginLocation);
         return loadContext.LoadFromAssemblyName(new AssemblyName(Path.GetFileNameWithoutExtension(pluginLocation)));
     }
 }

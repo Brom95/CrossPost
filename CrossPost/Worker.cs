@@ -20,9 +20,10 @@ public class Worker : BackgroundService
 
             foreach (IConfigurationSection senderSection in _config.GetSection("Senders").GetChildren())
             {
+                _logger.LogInformation(senderSection.GetValue<string>("Type"));
                 try
                 {
-                    var sender = _pluginFactory.GetMessageSender(senderSection);
+                    var sender = _pluginFactory.GetMessageSender(senderSection, stoppingToken);
                     receiver?.Subscribe(sender);
                 }
                 catch (Exception ex)

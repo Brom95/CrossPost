@@ -7,5 +7,5 @@ public interface ISender
 }
 public interface ISenderFactory
 {
-    public ISender CreateSender(IConfigurationSection receiverSection);
+    public ISender CreateSender(IConfigurationSection receiverSection, CancellationToken cancelToken);
 }

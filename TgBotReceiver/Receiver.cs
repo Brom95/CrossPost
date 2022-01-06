@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Receiver;
+
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Extensions.Polling;
@@ -9,30 +10,43 @@ using System.Runtime.CompilerServices;
 namespace TgBotReceiver;
 
 
-public class TgChannelMessageReceiver : Receiver.IReceiver
+public class TgChannelMessageReceiver : IReceiver
 {
     private QueuedUpdateReceiver _updateReceiver;
     private ConfiguredCancelableAsyncEnumerable<Update>.Enumerator enumerator;
+
     public TgChannelMessageReceiver(string botToken, CancellationToken cancelToken)
     {
-        var _bot = new TelegramBotClient(botToken);
+        var bot = new TelegramBotClient(botToken);
         var receiverOptions = new ReceiverOptions
         {
             ThrowPendingUpdates = true,
-            AllowedUpdates = new UpdateType[] { UpdateType.ChannelPost },
+            AllowedUpdates = new UpdateType[]{ UpdateType.ChannelPost},
         };
-        _updateReceiver = new QueuedUpdateReceiver(_bot, receiverOptions);
+        _updateReceiver = new QueuedUpdateReceiver(bot, receiverOptions);
         enumerator = _updateReceiver.WithCancellation(cancelToken).GetAsyncEnumerator();
+
     }
 
-    public async Task<global::Message.Message> ReceiveMessage()
+    public async Task<Message.Message> ReceiveMessage()
     {
-        await enumerator.MoveNextAsync();
-
+        try
+        {
+            await enumerator.MoveNextAsync();
+            return new global::Message.Message
+            {
+                Text = enumerator.Current.ChannelPost?.Text ?? ""
+            };
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
         return new global::Message.Message
         {
-            Text = enumerator.Current.ChannelPost?.Text ?? ""
+            Text = ""
         };
+
     }
 }
 

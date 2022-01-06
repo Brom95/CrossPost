@@ -15,17 +15,17 @@ namespace CrossPost.PluginsController
         }
         private string GetReceiverPath(string pluginName) => Path.Join(new string[] { _receiverBasePath, pluginName, $"{pluginName}.dll" });
         private string GetSenderPath(string pluginName) => Path.Join(new string[] { _sendersBasePath, pluginName, $"{pluginName}.dll" });
-        private T GetPlugin<T>(string pluginPath) where T : class
+        private static T? GetPlugin<T>(string pluginPath) where T : class
         {
             var asm = PluginLoadContext.LoadPlugin(pluginPath);
             foreach (Type type in asm.GetTypes())
             {
-                if (typeof(IReceiverFactory).IsAssignableFrom(type))
+                if (typeof(T).IsAssignableFrom(type))
                 {
                     return Activator.CreateInstance(type) as T;
                 }
             }
-            throw new Exception("Plugin not found");
+            throw new Exception($"Plugin {pluginPath} not found");
         }
 
         public MessageReceiver.Receiver? GetMessageReceiver(IConfigurationSection configurationSection, CancellationToken cancellationToken)
@@ -34,11 +34,11 @@ namespace CrossPost.PluginsController
             var factory = GetPlugin<IReceiverFactory>(GetReceiverPath(pluginName));
             return new MessageReceiver.Receiver(receiver: factory.CreateReceiver(configurationSection, cancellationToken));
         }
-        public MessageSender.MessageSender GetMessageSender(IConfigurationSection configurationSection)
+        public MessageSender.MessageSender GetMessageSender(IConfigurationSection configurationSection, CancellationToken cancellationToken)
         {
             var pluginName = configurationSection.GetValue<string>("Type");
             var factory = GetPlugin<ISenderFactory>(GetSenderPath(pluginName));
-            return new MessageSender.MessageSender(factory.CreateSender(configurationSection));
+            return new MessageSender.MessageSender(factory.CreateSender(configurationSection, cancellationToken));
         }
     }
 }

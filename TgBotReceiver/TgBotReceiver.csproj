@@ -10,23 +10,23 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0" />
 
 		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
-		<PackageReference Include="Telegram.Bot" Version="17.0.0" />
-		<PackageReference Include="Telegram.Bot.Extensions.Polling" Version="1.0.1" >
-			<Private>false</Private>
-		</PackageReference>
+		<PackageReference Include="Telegram.Bot.Extensions.Polling" Version="1.0.2" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\IReceiver\Receiver.csproj" />
-		<ProjectReference Include="..\Message\Message.csproj" />
+		<ProjectReference Include="..\IReceiver\Receiver.csproj">
+			<Private>false</Private>
+			<ExcludeAssets>runtime</ExcludeAssets>
+		</ProjectReference>
+		<ProjectReference Include="..\Message\Message.csproj">
+			<Private>false</Private>
+			<ExcludeAssets>runtime</ExcludeAssets>
+		</ProjectReference>
 	</ItemGroup>
 	<Target Name="CopyDLLs" AfterTargets="Build">
-		<Copy
-		  SourceFiles="$(TargetDir)$(ProjectName).dll;$(TargetDir)Telegram.Bot.Extensions.Polling.dll"
-		  DestinationFolder="..\CrossPost\Plugins\Receivers\$(ProjectName)" />
+		<Copy SourceFiles="$(TargetDir)$(ProjectName).dll;$(TargetDir)Telegram.Bot.dll;$(TargetDir)Newtonsoft.Json.dll;$(TargetDir)Telegram.Bot.Extensions.Polling.dll" DestinationFolder="..\CrossPost\Plugins\Receivers\$(ProjectName)" />
 	</Target>
 
 </Project>
